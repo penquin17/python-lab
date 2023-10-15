@@ -1,0 +1,15 @@
+# general
+numpy
+pandas
+plotly
+scikit-learn
+statsmodels
+nltk
+gensim
+
+# deep learning
+keras
+tensorflow
+pytorch
+jax
+transformers
