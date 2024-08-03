@@ -1,15 +1,5 @@
-# general
-numpy
-pandas
-plotly
-scikit-learn
-statsmodels
-nltk
-gensim
-
-# deep learning
-keras
-tensorflow
-pytorch
-jax
-transformers
+# conda-forge::ocl-icd-system # if needed for some systems
+autopep8
+conda-build
+isort
+pip
