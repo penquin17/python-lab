@@ -7,4 +7,5 @@ docker run -it -v "./nuitka":"/code" \
 
 docker exec -it test-nuitka bash
 
-python -m nuitka --standalone --onefile main.py
+python -m nuitka --version
+python -m nuitka --standalone --onefile --clang main.py

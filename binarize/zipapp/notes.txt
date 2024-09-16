@@ -1,0 +1,1 @@
+https://github.com/python/cpython/blob/3.12/Lib/zipapp.py
