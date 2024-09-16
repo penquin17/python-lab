@@ -1,0 +1,10 @@
+FROM python:3.11
+
+WORKDIR /data
+WORKDIR /code
+
+RUN apt update -y && apt upgrade -y \
+    && apt install patchelf
+
+# install dependencies
+RUN python -m pip install nuitka

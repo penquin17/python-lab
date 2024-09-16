@@ -1,0 +1,11 @@
+cd python-lab
+
+docker build -f cython/dockerfile -t python-lab:cython cython
+
+docker run -it -v "./cython":"/code" \
+    --rm --name test-binarize python-lab:cython bash
+
+docker exec -it test-binarize bash
+
+python setup.py build_ext --inplace
+gcc -o main main.c -I/usr/include/python3.11 -lpython3.11 -lm

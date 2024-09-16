@@ -1,0 +1,10 @@
+cd python-lab/binarize
+
+docker build -f nuitka/dockerfile -t python-lab:nuitka nuitka
+
+docker run -it -v "./nuitka":"/code" \
+    --rm --name test-nuitka python-lab:nuitka bash
+
+docker exec -it test-nuitka bash
+
+python -m nuitka --standalone --onefile main.py

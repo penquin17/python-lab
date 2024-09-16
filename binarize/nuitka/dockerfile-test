@@ -1,0 +1,29 @@
+FROM continuumio/miniconda3
+
+WORKDIR /data
+WORKDIR /code
+
+# python version
+RUN conda update -y conda
+RUN conda create -y -n py311 python=3.11
+
+# # install dependencies with conda
+# RUN conda install -y -n py311 conda-forge::gxx conda-forge::gcc
+# RUN conda install -y conda-forge::libpython-static conda-forge::patchelf
+
+# install dependencies with pip
+# RUN /bin/bash -c " \
+#     source activate py310 \
+#     "
+# RUN python -m pip install nuitka
+# RUN python -m pip install pytesseract
+
+# RUN conda install -y python=3.10.10
+# RUN conda install -y --solver=classic --force-reinstall \
+#     conda-forge::conda-libmamba-solver conda-forge::libmamba \
+#     conda-forge::libmambapy conda-forge::libarchive
+# RUN conda install -y conda-forge::gxx conda-forge::gcc
+# RUN conda install -y conda-forge::libpython-static conda-forge::patchelf conda-forge::binutils
+# RUN conda install -y conda-forge::tesseract
+
+# RUN python -m pip install nuitka
