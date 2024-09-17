@@ -13,4 +13,4 @@ class DiseaseExtractor(Extractor):
     def extract(self) -> Any:
         """Method to extract disease
         """
-        return random.choices(["Diabetes", "Cancer", "Allergies", "Obesity"])
+        return random.choices(["Diabetes", "Cancer", "Allergies", "Obesity"])[0]
