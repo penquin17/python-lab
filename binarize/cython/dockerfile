@@ -5,16 +5,16 @@ WORKDIR /code
 
 # python version
 RUN conda update -y conda 
-RUN conda install -y python=3.11
-RUN conda install -y --solver=classic --force-reinstall \
-    conda-forge::conda-libmamba-solver conda-forge::libmamba \
-    conda-forge::libmambapy conda-forge::libarchive
-
+RUN conda install -y python=3.12
 # install c compiler/ extension
 RUN conda install -y conda-forge::gxx conda-forge::gcc
 RUN conda install -y conda-forge::python-devtools conda-forge::cython
+# RUN conda install -y --solver=classic --force-reinstall \
+#     conda-forge::conda-libmamba-solver conda-forge::libmamba \
+#     conda-forge::libmambapy conda-forge::libarchive
+
 # install tesseract
-RUN conda install -y conda-forge::tesseract
+RUN conda install -y conda-forge::tesseract=5
 
 # install dependencies
 RUN python -m pip install pytesseract
