@@ -7,8 +7,8 @@ docker run -it -v "./cython":"/code" -v "./data":"/data"\
 
 docker exec -it test-binarize bash
 
-python cythonized.py build_ext --inplace
-python cythonized.py clean --all
+python cythonize.py build_ext --inplace
+python cythonize.py clean --all
 python main.py
 
 

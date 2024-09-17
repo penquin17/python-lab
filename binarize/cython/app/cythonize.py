@@ -39,7 +39,7 @@ setup(
     ext_modules=cythonize(
         [os.path.join(anchor, f"{package}/**/*.py")
          for package in main_packages],
-        annotate=True,
+        annotate=False,
         compiler_directives={"always_allow_keywords": True,
                              "language_level": "3", }),
 )
