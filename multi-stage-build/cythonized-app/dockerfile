@@ -9,7 +9,7 @@ RUN conda install -y python=3.12
 # install c compiler/ extension
 RUN conda install -y conda-forge::gxx conda-forge::gcc
 RUN conda install -y conda-forge::python-devtools conda-forge::cython
-RUN conda install -y conda-forge::conda-build
+RUN conda install -y conda-forge::conda-build conda-forge::conda-pack
 # install tesseract
 RUN conda install -y conda-forge::tesseract=5
 RUN conda install -y --solver=classic --force-reinstall \
@@ -26,8 +26,8 @@ COPY ./ /code/
 
 # build
 # open another terminal and do the following
-RUN /bin/bash -c "conda develop /code/subs/extract \
-    && conda develop /code/subs/load \
+RUN /bin/bash -c "python -m pip install /code/subs/extract \
+    && python -m pip install /code/subs/load \
     && cd /code/app \
     && python cythonize.py build_ext --inplace \
     && python cythonize.py clean --all \
@@ -39,14 +39,20 @@ RUN find /code -type f \
     \( -name "*.py" -o -name "*.c" -o -name "*.pyx" \) \
     -not -name "main.py" -delete
 
+# use conda pack to create a standalone env in venv
+RUN /bin/bash -c "conda-pack -o /tmp/env.tar \
+    && mkdir /venv \
+    && tar -xf /tmp/env.tar -C /venv \
+    && rm /tmp/env.tar"
+
 # stage 2: final runtime
-FROM continuumio/miniconda3 AS final
+FROM debian:buster AS final
 
 WORKDIR /data
 WORKDIR /code
 
-RUN conda install -y python=3.12
-RUN conda install -y conda-forge::gxx conda-forge::gcc
+# RUN conda install -y python=3.12
+# RUN conda install -y conda-forge::gxx conda-forge::gcc
 # RUN conda install -y conda-forge::tesseract=5
 
 COPY --from=builder /opt/conda/ /opt/conda/
