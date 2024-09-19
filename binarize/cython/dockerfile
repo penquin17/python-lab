@@ -10,11 +10,32 @@ RUN conda install -y python=3.12
 RUN conda install -y conda-forge::gxx conda-forge::gcc
 RUN conda install -y conda-forge::python-devtools conda-forge::cython
 RUN conda install -y conda-forge::conda-build
+# install tesseract
+RUN conda install -y conda-forge::tesseract=5
 RUN conda install -y --solver=classic --force-reinstall \
     conda-forge::conda-libmamba-solver conda-forge::libmamba \
     conda-forge::libmambapy conda-forge::libarchive
-# install tesseract
-RUN conda install -y conda-forge::tesseract=5
 
 # install dependencies
 RUN python -m pip install pytesseract
+
+# copy source code
+COPY ./ /code/
+
+# build
+# open another terminal and do the following
+RUN /bin/bash -c "conda develop /code/subs/extract \
+    && conda develop /code/subs/load \
+    && cd /code/app \
+    && python cythonize.py build_ext --inplace \
+    && python cythonize.py clean --all \
+    && cd /code/subs \
+    && python cythonize.py build_ext --inplace \
+    && python cythonize.py clean --all"
+# delete .py .c .pyx files except main.py
+RUN find /code -type f \
+    \( -name "*.py" -o -name "*.c" -o -name "*.pyx" \) \
+    -not -name "main.py" -delete
+
+# serve
+CMD [ "python", "app/main.py" ]
