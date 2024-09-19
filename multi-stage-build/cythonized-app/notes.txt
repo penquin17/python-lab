@@ -1,0 +1,22 @@
+cd python-lab/multi-stage-build
+
+docker build -f cythonized-app/dockerfile -t python-lab:cythonized-app cythonized-app
+
+docker run -it -v "./data":"/data" \
+    --rm --name test-multi-stage-build python-lab:cythonized-app bash
+
+
+conda develop subs/load
+conda develop subs/extract
+
+python cythonize.py build_ext --inplace
+python cythonize.py clean --all
+python main.py
+
+# clean up
+find /code/app/src -type f \( -name "*.py" -o -name "*.c" -o -name "*.pyx" \) -delete
+find /code/subs/load -type f \( -name "*.py" -o -name "*.c" -o -name "*.pyx" \) -delete
+find /code/subs/extract -type f \( -name "*.py" -o -name "*.c" -o -name "*.pyx" \) -delete
+find /code -type f -name "*.so" -delete
+
+# only required *.so other *.py and *.c can be deleted after being cythonized
