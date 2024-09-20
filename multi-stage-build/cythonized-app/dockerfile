@@ -15,35 +15,37 @@ RUN conda install -y conda-forge::tesseract=5
 RUN conda install -y --solver=classic --force-reinstall \
     conda-forge::conda-libmamba-solver conda-forge::libmamba \
     conda-forge::libmambapy conda-forge::libarchive
-    
+
 # install dependencies
 RUN python -m pip install pytesseract
 
 RUN conda clean --all -y
-    
+
 # copy source code
 COPY ./ /code/
 
 # build
 # open another terminal and do the following
-RUN /bin/bash -c "python -m pip install /code/subs/extract \
-    && python -m pip install /code/subs/load \
-    && cd /code/app \
+RUN /bin/bash -c "cd /code/app \
     && python cythonize.py build_ext --inplace \
     && python cythonize.py clean --all \
     && cd /code/subs \
     && python cythonize.py build_ext --inplace \
     && python cythonize.py clean --all"
+RUN /bin/bash -c "python -m pip install /code/subs/extract \
+    && python -m pip install /code/subs/load"
+
 # delete .py .c .pyx files except main.py
 RUN find /code -type f \
     \( -name "*.py" -o -name "*.c" -o -name "*.pyx" \) \
     -not -name "main.py" -delete
 
 # use conda pack to create a standalone env in venv
-RUN /bin/bash -c "conda-pack -o /tmp/env.tar \
+RUN /bin/bash -c "conda-pack -o /tmp/env.tar --ignore-missing-files \
     && mkdir /venv \
     && tar -xf /tmp/env.tar -C /venv \
     && rm /tmp/env.tar"
+RUN /venv/bin/conda-unpack
 
 # stage 2: final runtime
 FROM debian:buster AS final
@@ -51,16 +53,14 @@ FROM debian:buster AS final
 WORKDIR /data
 WORKDIR /code
 
-# RUN conda install -y python=3.12
-# RUN conda install -y conda-forge::gxx conda-forge::gcc
-# RUN conda install -y conda-forge::tesseract=5
-
-COPY --from=builder /opt/conda/ /opt/conda/
+COPY --from=builder /venv /venv
 COPY --from=builder /code/ /code/
 
-RUN conda clean --all -y
+RUN /bin/bash -c "/venv/bin/activate \
+    && conda install -y --solver=classic --force-reinstall \
+    conda-forge::conda-libmamba-solver conda-forge::libmamba \
+    conda-forge::libmambapy conda-forge::libarchive \
+    && conda install -y --solver=classic conda-forge::gxx conda-forge::gcc"
 
-ENV PATH="/opt/conda/bin:$PATH"
-
-# serve
-CMD [ "python", "app/main.py" ]
+# # serve
+# CMD [ "/bin/bash", "-c", "source /venv/bin/activate && python app/main.py" ]

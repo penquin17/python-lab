@@ -20,3 +20,7 @@ find /code/subs/extract -type f \( -name "*.py" -o -name "*.c" -o -name "*.pyx" 
 find /code -type f -name "*.so" -delete
 
 # only required *.so other *.py and *.c can be deleted after being cythonized
+
+SHELL ["/bin/bash", "-c"]
+ENTRYPOINT source /venv/bin/activate && \
+           python -c "import numpy; print('success!')"
