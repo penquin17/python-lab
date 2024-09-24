@@ -1,9 +1,12 @@
-from . import __get_path
-import sys
-sys.path.append(__get_path('../add'))
+try:
+    import sys
 
+    from . import __get_path
 
-from add import add
+    sys.path.append(__get_path('../add'))
+    from add import add
+except Exception as e:
+    raise e
 
 
 def multiply(x: int, y: int):
