@@ -1,0 +1,6 @@
+fastapi
+ray[serve]
+scipy
+torch
+transformers
+uvicorn
