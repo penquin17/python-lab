@@ -1,7 +1,9 @@
 # https://huggingface.co/facebook/musicgen-small
+import os
 from typing import Any
 
 import ray
+import requests
 import scipy
 from fastapi import FastAPI
 from pydantic import BaseModel
@@ -34,7 +36,9 @@ class Input(BaseModel):
 class MusicGenerator:
     def __init__(self):
         # Load the model when deployment starts
-        self.synthesiser = pipeline("text-to-audio", "facebook/musicgen-small")
+        # self.synthesiser = pipeline("text-to-audio", "facebook/musicgen-small",)
+        self.synthesiser = pipeline(
+            "text-to-audio", "/models/models--facebook--musicgen-small/snapshots/4c8334b02c6ec4e8664a91979669a501ec497792")
 
     def gen_music(self, description: str):
         try:
@@ -58,10 +62,16 @@ class MusicGenerator:
         return music
 
     def write_audio(self, audio: Any, path: str = './temp/audio.wav'):
+        os.makedirs(os.path.dirname(path))
         scipy.io.wavfile.write(path, rate=audio["sampling_rate"],
                                data=audio["audio"])
 
-serve.start(http_options={"host": "0.0.0.0", "port": 8000})
-music_generator = MusicGenerator.bind()
-serve.run(music_generator, route_prefix="/v1")
 
+# serve.start(http_options={"host": "0.0.0.0", "port": 8000})
+music_generator = MusicGenerator.bind()
+# serve.run(music_generator, route_prefix="/v1")
+
+
+# url = "http://localhost:8000/v1/gen_music"
+# data = {"text": "Heal the world"}
+# response = requests.post(url, json=data)

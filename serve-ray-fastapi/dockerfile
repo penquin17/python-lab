@@ -1,5 +1,6 @@
 FROM continuumio/miniconda3
 
+WORKDIR /models
 WORKDIR /code
 
 RUN conda create -y -n venv python=3.12

@@ -1,5 +1,6 @@
 # conda-forge::ocl-icd-system # if needed for some systems
-autopep8
-conda-build
-isort
-pip
+conda-forge::autopep8
+conda-forge::conda-build
+conda-forge::cython
+conda-forge::isort
+conda-forge::pip

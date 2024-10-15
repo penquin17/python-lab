@@ -1,0 +1,43 @@
+# serve build runapp:music_generator -o serve_config.yaml
+proxy_location: EveryNode
+
+http_options:
+  host: 0.0.0.0
+  port: 8000
+  request_timeout_s: 600
+  keep_alive_timeout_s: 30
+
+# grpc_options:
+#   port: 9000
+#   grpc_servicer_functions: []
+
+# logging_config:
+#   encoding: TEXT
+#   log_level: INFO
+#   logs_dir: null
+#   enable_access_log: true
+
+applications:
+- name: music_generator_app
+  route_prefix: /v1
+  import_path: runapp:music_generator
+  runtime_env: {}
+  deployments:
+  - name: music_generator
+    autoscaling_config:
+      min_replicas: 1
+      initial_replicas: null
+      max_replicas: 5
+      target_ongoing_requests: 2.0
+      metrics_interval_s: 10.0
+      look_back_period_s: 30.0
+      smoothing_factor: 1.0
+      upscale_smoothing_factor: null
+      downscale_smoothing_factor: null
+      upscaling_factor: null
+      downscaling_factor: null
+      downscale_delay_s: 600.0
+      upscale_delay_s: 30.0
+    ray_actor_options:
+      num_cpus: 2.0
+      num_gpus: 0.0
