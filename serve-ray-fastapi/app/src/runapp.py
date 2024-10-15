@@ -36,9 +36,12 @@ class Input(BaseModel):
 class MusicGenerator:
     def __init__(self):
         # Load the model when deployment starts
-        # self.synthesiser = pipeline("text-to-audio", "facebook/musicgen-small",)
-        self.synthesiser = pipeline(
-            "text-to-audio", "/models/models--facebook--musicgen-small/snapshots/4c8334b02c6ec4e8664a91979669a501ec497792")
+        self.synthesiser = pipeline("text-to-audio", "facebook/musicgen-small",)
+        # self.synthesiser = pipeline(
+        #     "text-to-audio",
+        #     "/models/models--facebook--musicgen-small/snapshots/4c8334b02c6ec4e8664a91979669a501ec497792"
+        # )
+        
 
     def gen_music(self, description: str):
         try:
@@ -61,7 +64,7 @@ class MusicGenerator:
                                  forward_params={"do_sample": True})
         return music
 
-    def write_audio(self, audio: Any, path: str = './temp/audio.wav'):
+    def write_audio(self, audio: Any, path: str = '/code/temp/audio.wav'):
         os.makedirs(os.path.dirname(path))
         scipy.io.wavfile.write(path, rate=audio["sampling_rate"],
                                data=audio["audio"])

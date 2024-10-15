@@ -20,7 +20,7 @@ http_options:
 applications:
 - name: music_generator_app
   route_prefix: /v1
-  import_path: runapp:music_generator
+  import_path: main:music_generator
   runtime_env: {}
   deployments:
   - name: music_generator

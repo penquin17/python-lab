@@ -3,6 +3,9 @@ FROM continuumio/miniconda3
 WORKDIR /models
 WORKDIR /code
 
+ENV HF_HOME=/models
+ENV HF_HUB_CACHE=/models
+
 RUN conda create -y -n venv python=3.12
 RUN conda install -y conda-forge::autopep8 conda-forge::conda-build \
     conda-forge::isort conda-forge::pip
@@ -11,3 +14,5 @@ COPY ./requirements.txt /code/requirements.txt
 
 RUN /bin/bash -c " source activate venv \
     && python -m pip install -r /code/requirements.txt"
+
+CMD ["/bin/bash", "-c", "source activate venv && serve run config.yaml"]
